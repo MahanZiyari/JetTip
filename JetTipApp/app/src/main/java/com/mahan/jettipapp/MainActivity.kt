@@ -8,31 +8,35 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.mahan.jettipapp.ui.components.TopHeader
 import com.mahan.jettipapp.ui.theme.JetTipAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JetTipAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
+            MyApp {
+                TopHeader()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun MyApp(content: @Composable () -> Unit) {
+    JetTipAppTheme {
+        // A surface container using the 'background' color from the theme
+        Surface(color = MaterialTheme.colors.background) {
+            content()
+        }
+    }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    JetTipAppTheme {
-        Greeting("Android")
+    MyApp {
+        TopHeader()
     }
 }
