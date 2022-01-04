@@ -2,7 +2,6 @@ package com.mahan.jettipapp
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -10,23 +9,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Slider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.rounded.AttachMoney
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mahan.jettipapp.ui.components.InputField
+import com.mahan.jettipapp.ui.components.RoundButton
 import com.mahan.jettipapp.ui.components.TopHeader
 import com.mahan.jettipapp.ui.theme.JetTipAppTheme
 
@@ -81,11 +80,18 @@ private fun BillForm(
     val validState = remember(key1 = totalBillState.value) {
         totalBillState.value.trim().isNotEmpty()
     }
+    var numberOfContributors by remember {
+        mutableStateOf(1)
+    }
+    var sliderPositionValue by remember {
+        mutableStateOf(0f)
+    }
     val keyBoardController = LocalSoftwareKeyboardController.current
+    val splitRange = IntRange(start = 1, endInclusive = 100)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(horizontal = 12.dp),
         border = BorderStroke(
             width = 1.dp,
             color = Color.LightGray
@@ -111,6 +117,87 @@ private fun BillForm(
 
                 }
             )
+
+            if (true) {
+                // First Row under InputField
+                Row(
+                    modifier = Modifier
+                        .padding(2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = "Split",
+                        modifier = Modifier
+                            .align(
+                                Alignment.CenterVertically
+                            )
+                            .padding(start = 6.dp)
+                    )
+                    Spacer(modifier = Modifier.width(170.dp))
+                    // Plus and Minus Buttons Row
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 3.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        RoundButton(
+                            icon = Icons.Default.Remove,
+                            onClick = {
+                                if (numberOfContributors > splitRange.first)
+                                    numberOfContributors--
+                            }
+                        )
+                        Text(
+                            text = numberOfContributors.toString(),
+                            modifier = Modifier
+                                .align(
+                                    Alignment.CenterVertically
+                                )
+                                .padding(horizontal = 9.dp)
+                        )
+                        RoundButton(
+                            icon = Icons.Default.Add,
+                            onClick = {
+                                if (numberOfContributors < splitRange.last)
+                                    numberOfContributors++
+                            }
+                        )
+                    }
+
+                } // End of First Row
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = "Tip",
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                    Spacer(modifier = Modifier.width(230.dp))
+                    Text(
+                        text = "$33",
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                } // End of Second Row
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(12.dp)
+                ) {
+                    Text(text = "${sliderPositionValue.times(100).toInt()}%")
+                    Slider(
+                        value = sliderPositionValue,
+                        onValueChange = {
+                            // it refers to new Value
+                            sliderPositionValue = it
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        steps = 5
+                    )
+                }
+            }
         }
     }
 }
