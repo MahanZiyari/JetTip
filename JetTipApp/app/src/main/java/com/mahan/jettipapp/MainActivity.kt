@@ -21,7 +21,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mahan.jettipapp.ui.components.InputField
 import com.mahan.jettipapp.ui.components.RoundButton
@@ -36,15 +35,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp {
+                // States of The App
+
+                // Responsible for the user input value
                 var totalBillState by remember {
                     mutableStateOf("")
                 }
+                // Managing the number of the people that should participate in paying
                 var numberOfContributors by remember {
                     mutableStateOf(1)
                 }
+                // The amount of total tip base on bill value
                 var tipAmount by remember {
                     mutableStateOf(0.0f)
                 }
+                // The amount of money that each participant should pay
                 val totalPerPerson = remember(
                     key1 = totalBillState,
                     key2 = numberOfContributors,
@@ -56,6 +61,7 @@ class MainActivity : ComponentActivity() {
                         splitBy = numberOfContributors
                     )
                 }
+                // UI
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,6 +70,7 @@ class MainActivity : ComponentActivity() {
                     TopHeader(
                         totalPerPerson = totalPerPerson.toDouble()
                     )
+
                     Spacer(modifier = Modifier.height(4.dp))
 
                     MainContent(
@@ -77,7 +84,6 @@ class MainActivity : ComponentActivity() {
                         },
                         tipAmount = tipAmount,
                         onSliderValueChanged = {
-                            // Calculating the amount of tip
                             tipAmount = calculateTotalTip(
                                 totalBillState.toInt(),
                                 it.times(100).toInt()
@@ -137,8 +143,7 @@ private fun BillForm(
     totalTipAmount: Float,
     onSliderValueChanged: (Float) -> Unit,
 ) {
-
-    // States
+    // Validate the user input for non-empty input
     val validState = remember(key1 = totalBillState) {
         totalBillState.trim().isNotEmpty()
     }
@@ -146,12 +151,10 @@ private fun BillForm(
         mutableStateOf(0f)
     }
 
-
-    // Non-states Variables
     val keyBoardController = LocalSoftwareKeyboardController.current
     val splitRange = IntRange(start = 1, endInclusive = 100)
 
-    // The start of UI Design
+    // UI
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -172,14 +175,7 @@ private fun BillForm(
                 label = "Bill Amount",
                 leadingIcon = Icons.Rounded.AttachMoney,
                 onAction = KeyboardActions {
-                    if (!validState) return@KeyboardActions
-
-                    //onValueChanged
-                    // onValueChanged(totalBillState.value)
-                    onBillAmountChanged(totalBillState)
-
-                    keyBoardController!!.hide()
-
+                    if (validState) keyBoardController!!.hide()
                 },
                 onValueChanged = {
                     onBillAmountChanged(it)
@@ -278,14 +274,5 @@ private fun BillForm(
                 }
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MyApp {
-        TopHeader()
     }
 }

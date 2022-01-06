@@ -10,7 +10,8 @@ fun calculateTotalPerPerson(
     tip: Float,
     splitBy: Int
 ): Float {
-    if (billValue.isEmpty())
-        return 0.0f
-    return (billValue.toFloat() + tip).div(splitBy)
+    return when (billValue) {
+        "" -> 0.0f
+        else -> (billValue.toFloat() + tip).div(splitBy)
+    }
 }

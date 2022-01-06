@@ -45,8 +45,8 @@ fun RoundButton(
 @Composable
 fun RoundButtonPreview() {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        RoundButton(icon = Icons.Default.Remove, onClick = { /*TODO*/ })
+        RoundButton(icon = Icons.Default.Remove, onClick = {})
         Spacer(modifier = Modifier.width(6.dp))
-        RoundButton(icon = Icons.Default.Add, onClick = { /*TODO*/ })
+        RoundButton(icon = Icons.Default.Add, onClick = {})
     }
 }

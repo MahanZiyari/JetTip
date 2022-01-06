@@ -25,7 +25,6 @@ fun TopHeader(
             .fillMaxWidth()
             .height(150.dp),
         color = Color(0xFFE9D7F7)
-
     ) {
         Column(
             modifier = Modifier
@@ -37,7 +36,6 @@ fun TopHeader(
                 text = "Total Per Person",
                 style = MaterialTheme.typography.h5
             )
-
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = "$" + "%.2f".format(totalPerPerson),
